@@ -1,19 +1,58 @@
+import React, { useEffect, useState } from 'react';
+import RecipeTagList from './recipetaglist';
+import RecipeList from './recipelist';
+import { IRecipe } from './types';
 
-const App = () => {
+const App: React.FC = () => {
+    const [tags, setTags] = useState<string[]>([]);
+    const [recipes, setRecipes] = useState<IRecipe[]>([]);
+    const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchTags = async () => {
+            const response = await fetch('https://dummyjson.com/recipes/tags');
+            const data = await response.json();
+            setTags(data);
+        };
 
-  return (
-    <div>
-        <h1>ACME Recipe O'Master</h1>
-        <div>Remove this and implement recipe tag list here. </div>
-        <ul>
-        <li>On start the application displays a list of recipe tags such as 'pasta', 'cookies' etc. The tag information is loaded from an API (https://dummyjson.com/recipes/tags)</li>
-        <li> The user can click on a tag and the application will then hide the tag list and display a list of recipes matching the selected tag. The recipe information for the clicked tag is loaded from an API (https://dummyjson.com/recipes/tag/Pizza).</li>
-        <li> User can also go back to the tag list. </li>
-        <li> Each receipe is displayed as box where recipe data such as ingredients and instructions are displayed</li>
-        </ul>
-    </div>
-  );
+        fetchTags();
+    }, []);
+
+    useEffect(() => {
+        if (selectedTag) {
+            const fetchRecipes = async () => {
+                const response = await fetch(`https://dummyjson.com/recipes/tag/${selectedTag}`);
+                const data = await response.json();
+                setRecipes(data.recipes);
+            };
+
+            fetchRecipes();
+        }
+    }, [selectedTag]);
+
+    const handleSelectTag = (tagName: string) => {
+        setSelectedTag(tagName);
+    };
+
+    const handleGoBack = () => {
+        setSelectedTag(null);
+        setRecipes([]);
+    };
+
+    return (
+        <div className="app">
+            <h1>ACME Recipe O'Master</h1> {/* Added header here */}
+            {selectedTag ? (
+                <>
+                    <h2>Recipes for {selectedTag}</h2>
+                    <button onClick={handleGoBack}>Back to Tags</button>
+                    <RecipeList recipes={recipes} />
+                </>
+            ) : (
+                <RecipeTagList tagList={tags} onSelectTag={handleSelectTag} />
+            )}
+        </div>
+    );
 };
 
 export default App;
