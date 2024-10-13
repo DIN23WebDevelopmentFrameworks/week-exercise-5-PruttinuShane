@@ -3,7 +3,7 @@ import RecipeTagList from './RecipeTagList';
 import RecipeList from './RecipeList';
 import { IRecipe } from './types';
 
-const App: React.FC = () => {
+const App: React.FC = () => { 
     const [tags, setTags] = useState<string[]>([]);
     const [recipes, setRecipes] = useState<IRecipe[]>([]);
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
