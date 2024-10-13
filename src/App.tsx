@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import RecipeTagList from './recipetaglist';
-import RecipeList from './recipelist';
+import RecipeTagList from './RecipeTagList';
+import RecipeList from './RecipeList';
 import { IRecipe } from './types';
 
 const App: React.FC = () => {
